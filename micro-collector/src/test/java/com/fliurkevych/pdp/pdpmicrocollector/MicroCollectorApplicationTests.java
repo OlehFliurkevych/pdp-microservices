@@ -1,10 +1,10 @@
-package com.fliurkevych.pdp.pdpmicrorecipient;
+package com.fliurkevych.pdp.pdpmicrocollector;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApplicationTests {
+class MicroCollectorApplicationTests {
 
 	@Test
 	void contextLoads() {
