@@ -13,6 +13,12 @@ services:
       - "8081:8081"
     networks:
       - recipient
+    environment:
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE_NAME=amq_notification_queue
+      - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
+      - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
   micro-sender:
     container_name: sender
     build: micro-sender
@@ -20,14 +26,21 @@ services:
       - "8082:8082"
     networks:
       - sender
+    environment:
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE_NAME=amq_notification_queue
+      - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
+      - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
+      - "5672:5672"
       - "15672:15672"
     networks:
       - recipient
       - sender
 networks:
-  sender: {}
-  recipient: {}
+  sender: { }
+  recipient: { }
