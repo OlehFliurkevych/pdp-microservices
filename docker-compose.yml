@@ -19,6 +19,7 @@ services:
       - RABBITMQ_QUEUE_NAME=amq_notification_queue
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
+      - RABBITMQ_CONSUMER_FIX_DELAY=1000
   micro-sender:
     container_name: sender
     build: micro-sender
