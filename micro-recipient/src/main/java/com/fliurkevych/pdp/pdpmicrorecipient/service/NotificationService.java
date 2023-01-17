@@ -17,7 +17,6 @@ import java.util.List;
 public class NotificationService {
 
   private final NotificationRepository notificationRepository;
-
   private final Converter<Message, NotificationEntity> converter;
 
   public NotificationService(NotificationRepository notificationRepository,
@@ -32,9 +31,18 @@ public class NotificationService {
     return notificationRepository.save(notification);
   }
 
-  public List<NotificationEntity> getAllNotifications() {
+  public List<NotificationEntity> getAndRemoveAllNotifications() {
     log.info("Fetching all notifications");
-    return notificationRepository.findAll();
+    var notifications = notificationRepository.findAll();
+    log.info("Fetched [{}] records of notification", notifications.size());
+
+    if (!notifications.isEmpty()) {
+      log.info("Removing all notifications");
+      notificationRepository.deleteAllInBatch();
+      log.info("Removed all notification");
+    }
+
+    return notifications;
   }
 
 }
