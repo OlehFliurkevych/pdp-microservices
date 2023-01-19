@@ -19,7 +19,7 @@ services:
       - RABBITMQ_QUEUE_NAME=amq_notification_queue
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
-      - RABBITMQ_CONSUMER_FIX_DELAY=1000
+      - RABBITMQ_CONSUMER_FIX_DELAY=5000
   micro-sender:
     container_name: sender
     build: micro-sender
@@ -33,6 +33,7 @@ services:
       - RABBITMQ_QUEUE_NAME=amq_notification_queue
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
+      - RABBITMQ_PRODUCER_FIX_DELAY=500
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
@@ -42,6 +43,21 @@ services:
     networks:
       - recipient
       - sender
+  eureka:
+    container_name: eureka
+    build: eureka-service
+    ports:
+      - "8761:8761"
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
 networks:
   sender: { }
   recipient: { }
