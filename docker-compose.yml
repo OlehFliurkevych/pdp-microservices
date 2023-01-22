@@ -6,6 +6,10 @@ services:
       - "8080:8080"
     networks:
       - recipient
+    environment:
+      - RABBITMQ_CONSUMER_FIX_DELAY=10000
+      - EUREKA_HOST=eureka
+      - EUREKA_PORT=8761
   micro-recipient:
     container_name: recipient
     build: micro-recipient
@@ -20,6 +24,8 @@ services:
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
       - RABBITMQ_CONSUMER_FIX_DELAY=5000
+      - EUREKA_HOST=eureka
+      - EUREKA_PORT=8761
   micro-sender:
     container_name: sender
     build: micro-sender
@@ -34,6 +40,8 @@ services:
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
       - RABBITMQ_PRODUCER_FIX_DELAY=500
+      - EUREKA_HOST=eureka
+      - EUREKA_PORT=8761
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
@@ -48,6 +56,9 @@ services:
     build: eureka-service
     ports:
       - "8761:8761"
+    networks:
+      - recipient
+      - sender
   prometheus:
     container_name: prometheus
     image: prom/prometheus

@@ -1,12 +1,9 @@
-package com.fliurkevych.pdp.pdpmicrorecipient.consumer;
+package com.fliurkevych.pdp.pdpmicrorecipient.scheduler;
 
-import com.fliurkevych.pdp.pdpmicrorecipient.entity.NotificationEntity;
 import com.fliurkevych.pdp.pdpmicrorecipient.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +14,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class NotificationConsumer {
+public class MessageSchedulerConsumer {
   
   private final RabbitTemplate rabbitTemplate;
   private final NotificationService notificationService;
@@ -25,7 +22,7 @@ public class NotificationConsumer {
   @Value("${app.rabbitmq.queue.name}")
   private String queueName;
 
-  public NotificationConsumer(RabbitTemplate rabbitTemplate,
+  public MessageSchedulerConsumer(RabbitTemplate rabbitTemplate,
     NotificationService notificationService) {
     this.rabbitTemplate = rabbitTemplate;
     this.notificationService = notificationService;
