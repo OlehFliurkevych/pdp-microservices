@@ -1,5 +1,6 @@
 package com.fliurkevych.pdp.pdpmicrosender.publisher;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class MessagePublisher {
     this.rabbitTemplate = rabbitTemplate;
   }
 
+  @Timed(value = "message.publisher.time", description = "Time spend to publish new message")
   public boolean sendMessage(String message) {
     log.info("Sending message [{}] to exchange [{}].", message, topicExchangeName);
     rabbitTemplate.convertAndSend(topicExchangeName, routingKey, message);

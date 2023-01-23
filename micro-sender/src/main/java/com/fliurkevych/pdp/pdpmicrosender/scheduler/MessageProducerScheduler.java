@@ -4,7 +4,6 @@ import com.fliurkevych.pdp.pdpmicrosender.publisher.MessagePublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -13,11 +12,11 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class MessageSchedulerProducer {
+public class MessageProducerScheduler {
   
   private final MessagePublisher messagePublisher;
 
-  public MessageSchedulerProducer(MessagePublisher messagePublisher) {
+  public MessageProducerScheduler(MessagePublisher messagePublisher) {
     this.messagePublisher = messagePublisher;
   }
   
