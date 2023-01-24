@@ -22,8 +22,14 @@ public class MessageController {
     this.notificationService = notificationService;
   }
 
-  @GetMapping("/messages")
+  @GetMapping("/messages/remove")
   public ResponseEntity<List<NotificationEntity>> getAndRemoveAllNotifications() {
     return ResponseEntity.ok(notificationService.getAndRemoveAllNotifications());
   }
+
+  @GetMapping("/messages")
+  public ResponseEntity<List<NotificationEntity>> getAllNotifications() {
+    return ResponseEntity.ok(notificationService.getAllNotifications());
+  }
+  
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface MicroRecipientFeignClient {
 
-  @GetMapping("/messages")
+  @GetMapping("/messages/remove")
   ResponseEntity<List<?>> getAndRemoveAllNotifications();
 
 }

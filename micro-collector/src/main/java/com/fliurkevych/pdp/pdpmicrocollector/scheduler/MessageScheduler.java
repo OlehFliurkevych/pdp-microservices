@@ -18,16 +18,16 @@ public class MessageScheduler {
     this.microRecipientFeignClient = microRecipientFeignClient;
   }
 
-  @Scheduled(fixedDelayString = "${spring.scheduler.message.consumer.fixedDelay}")
+  @Scheduled(fixedDelayString = "${spring.scheduler.message.getAndRemoveAll.fixedDelay}")
   public void callMicroRecipient() {
-    log.info("Scheduled call GET 'micro-recipient/messages'");
+    log.info("Scheduled call GET 'micro-recipient/messages/remove'");
     var response = microRecipientFeignClient.getAndRemoveAllNotifications();
 
     if (response.getStatusCode().is2xxSuccessful()) {
-      log.info("Successfully called GET 'micro-recipient/messages'. Body of response: [{}]",
+      log.info("Successfully called GET 'micro-recipient/messages/remove'. Body of response: [{}]",
         response.getBody());
     } else {
-      log.info("Failed call GET 'micro-recipient/messages'");
+      log.info("Failed call GET 'micro-recipient/messages/remove'");
     }
   }
 

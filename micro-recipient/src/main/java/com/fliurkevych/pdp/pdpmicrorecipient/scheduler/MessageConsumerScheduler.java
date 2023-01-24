@@ -31,13 +31,13 @@ public class MessageConsumerScheduler {
 
   @Counted(value = "message.consumer.counted", description = "Count of invoking message consumer")
   @Scheduled(fixedDelayString = "${spring.scheduler.rabbitmq.consumer.fixedDelay}")
-  public void receiveMessageFromRabbitMq(){
+  public void receiveMessageFromRabbitMq() {
     log.info("Receiving message from rabbitmq queue [{}]", queueName);
     Optional.ofNullable(rabbitTemplate.receive(queueName))
           .ifPresent(message -> {
-              log.info("Received message: [{}]", message.getBody());
-              notificationService.create(message);
-              log.info("Saved received message: [{}]", message.getBody());
+              log.info("Received message: [{}]", message);
+              var saved = notificationService.create(message);
+              log.info("Saved received message: [{}]", saved);
             });
   }
 

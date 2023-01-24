@@ -7,7 +7,7 @@ services:
     networks:
       - recipient
     environment:
-      - RABBITMQ_CONSUMER_FIX_DELAY=10000
+      - RABBITMQ_GET_REMOVE_ALL_FIX_DELAY=15000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
   micro-recipient:
@@ -23,7 +23,7 @@ services:
       - RABBITMQ_QUEUE_NAME=amq_notification_queue
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
-      - RABBITMQ_CONSUMER_FIX_DELAY=5000
+      - RABBITMQ_CONSUMER_FIX_DELAY=1000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
   micro-sender:
@@ -39,7 +39,7 @@ services:
       - RABBITMQ_QUEUE_NAME=amq_notification_queue
       - RABBITMQ_EXCHANGE_NAME=amq_notification_exchange
       - RABBITMQ_ROUTING_KEY=amq_notification_routing_key
-      - RABBITMQ_PRODUCER_FIX_DELAY=500
+      - RABBITMQ_PRODUCER_FIX_DELAY=1000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
   rabbitmq:
