@@ -10,6 +10,18 @@ services:
       - RABBITMQ_GET_REMOVE_ALL_FIX_DELAY=15000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
+    healthcheck:
+      test: curl -f http://localhost:8080/actuator/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    depends_on:
+      micro-recipient:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
   micro-recipient:
     container_name: recipient
     build: micro-recipient
@@ -26,6 +38,18 @@ services:
       - RABBITMQ_CONSUMER_FIX_DELAY=1000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
+    healthcheck:
+      test: curl -f http://localhost:8081/actuator/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    depends_on:
+      micro-sender:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
   micro-sender:
     container_name: sender
     build: micro-sender
@@ -42,6 +66,18 @@ services:
       - RABBITMQ_PRODUCER_FIX_DELAY=1000
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
+    healthcheck:
+      test: curl -f http://localhost:8082/actuator/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
@@ -51,6 +87,12 @@ services:
     networks:
       - recipient
       - sender
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
   eureka:
     container_name: eureka
     build: eureka-service
@@ -59,6 +101,22 @@ services:
     networks:
       - recipient
       - sender
+    healthcheck:
+      test: curl -f http://localhost:8761 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    depends_on:
+      micro-sender:
+        condition: service_healthy
+      micro-recipient:
+        condition: service_healthy
+      micro-collector:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
   prometheus:
     container_name: prometheus
     image: prom/prometheus
@@ -66,6 +124,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
     networks:
       - recipient
       - sender
