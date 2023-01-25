@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/kubectl-sender: "true"
+    io.kompose.service: micro-sender
+  name: micro-sender
+spec:
+  containers:
+    - env:
+        - name: EUREKA_HOST
+          value: eureka
+        - name: EUREKA_PORT
+          value: "8761"
+        - name: RABBITMQ_EXCHANGE_NAME
+          value: amq_notification_exchange
+        - name: RABBITMQ_HOST
+          value: rabbitmq
+        - name: RABBITMQ_PORT
+          value: "5672"
+        - name: RABBITMQ_PRODUCER_FIX_DELAY
+          value: "1000"
+        - name: RABBITMQ_QUEUE_NAME
+          value: amq_notification_queue
+        - name: RABBITMQ_ROUTING_KEY
+          value: amq_notification_routing_key
+      image: micro-sender
+      livenessProbe:
+        exec:
+          command:
+            - curl -f http://localhost:8082/actuator/health || exit 1
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 10
+      name: sender
+      ports:
+        - containerPort: 8082
+      resources: {}
+  restartPolicy: OnFailure
+status: {}

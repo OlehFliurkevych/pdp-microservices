@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/kubectl-recipient: "true"
+    io.kompose.network/kubectl-sender: "true"
+    io.kompose.service: eureka
+  name: eureka
+spec:
+  containers:
+    - image: eureka
+      livenessProbe:
+        exec:
+          command:
+            - curl -f http://localhost:8761 || exit 1
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 10
+      name: eureka
+      ports:
+        - containerPort: 8761
+      resources: {}
+  restartPolicy: OnFailure
+status: {}
