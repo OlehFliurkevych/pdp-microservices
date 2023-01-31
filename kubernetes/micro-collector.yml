@@ -19,7 +19,6 @@ spec:
       containers:
         - name: micro-collector
           image: olehfliurkevych/micro-collector:0.0.1
-#          imagePullPolicy: Never
           livenessProbe:
             httpGet:
               path: /actuator/health

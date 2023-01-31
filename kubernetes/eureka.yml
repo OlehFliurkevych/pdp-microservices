@@ -19,7 +19,6 @@ spec:
       containers:
         - name: eureka
           image: olehfliurkevych/eureka:0.0.1
-#          imagePullPolicy: Never
           livenessProbe:
             httpGet:
               path: /actuator/health

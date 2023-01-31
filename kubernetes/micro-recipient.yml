@@ -19,7 +19,6 @@ spec:
       containers:
         - name: micro-recipient
           image: olehfliurkevych/micro-recipient:0.0.1
-#          imagePullPolicy: Never
           livenessProbe:
             httpGet:
               path: /actuator/health
