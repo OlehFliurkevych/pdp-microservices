@@ -3,10 +3,10 @@ kind: ConfigMap
 metadata:
   name: rabbitmq-configmap
 data:
-  rabbitmq_port: '5672'
-  rabbitmq_host: rabbit-service
-  rabbitmq_queue_name: amq_notification_queue
-  rabbitmq_exchange_name: amq_notification_exchange
-  rabbitmq_routing_key: amq_notification_routing_key
+  port: '5672'
+  host: rabbitmq-service
+  queue_name: amq_notification_queue
+  exchange_name: amq_notification_exchange
+  routing_key: amq_notification_routing_key
   
   

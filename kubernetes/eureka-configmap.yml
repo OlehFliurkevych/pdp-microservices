@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eureka-configmap
+data:
+  port: '8761'
+  host: eureka-service
+  

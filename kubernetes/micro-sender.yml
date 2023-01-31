@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-sender-deployment
+  labels:
+    project: pdp
+    app: micro-sender
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-sender
+  template:
+    metadata:
+      labels:
+        project: pdp
+        app: micro-sender
+    spec:
+      containers:
+        - name: micro-sender
+          image: olehfliurkevych/micro-sender:0.0.1
+#          imagePullPolicy: Never
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: service-port
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: service-port
+              containerPort: 8082
+          env:
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: port
+            - name: EUREKA_PREFER_IP
+              value: 'true'
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: port
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: host
+            - name: RABBITMQ_QUEUE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: queue_name
+            - name: RABBITMQ_EXCHANGE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: exchange_name
+            - name: RABBITMQ_ROUTING_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: routing_key
+            - name: RABBITMQ_PRODUCER_FIX_DELAY
+              valueFrom:
+                configMapKeyRef:
+                  name: schedule-configmap
+                  key: rabbitmq_producer_fix_delay
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-sender-service
+  labels:
+    project: pdp
+    app: micro-sender
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+  selector:
+    app: micro-sender
+

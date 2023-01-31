@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: schedule-configmap
+data:
+  rabbitmq_producer_fix_delay: '1000'
+  rabbitmq_consumer_fix_delay: '1000'
+  rabbitmq_get_remove_all_fix_delay: '15000'
+  
+  
