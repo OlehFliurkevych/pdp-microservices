@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-configmap
+  labels:
+    name: prometheus-configmap
+data:
+  prometheus.rules: |-
+    groups:
+    - name: Instance Is Down
+      rules:
+        - alert: InstanceDown
+          expr: up{job="pdp-microservices"} < 1
+          for: 5m
+  prometheus.yml: |-
+    global:
+      scrape_interval: 15s # Set the scrape interval to every 15 seconds
+      evaluation_interval: 15s # Evaluate rules every 15 seconds
+    scrape_configs:
+      - job_name: 'pdp-microservices'
+        metrics_path: '/actuator/prometheus'
+        scrape_interval: 15s
+        static_configs:
+          - targets: ['micro-collector-service:8080',
+                      'micro-recipient-service:8081',
+                      'micro-sender-service:8082' ]
