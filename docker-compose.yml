@@ -155,6 +155,30 @@ services:
       - recipient
     environment:
       - POSTGRES_PASSWORD=postgres
+  micro-visualizer:
+    container_name: visualizer
+    build: micro-visualizer
+    image: micro-visualizer
+    ports:
+      - "8083:8083"
+    networks:
+      - recipient
+    environment:
+      - EUREKA_HOST=eureka
+      - EUREKA_PORT=8761
+      - EUREKA_PREFER_IP=true
+      - POSTGRES_URL=postgres:5432/postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: curl -f http://localhost:8083/actuator/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    deploy:
+      restart_policy:
+        condition: on-failure
 networks:
   sender: { }
   recipient: { }

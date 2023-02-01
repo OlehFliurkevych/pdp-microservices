@@ -7,4 +7,4 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 15s
     static_configs:
-      - targets: [ 'micro-collector:8080', 'micro-recipient:8081', 'micro-sender:8082' ]
+      - targets: [ 'micro-collector:8080', 'micro-recipient:8081', 'micro-sender:8082', 'micro-visualizer:8083' ]

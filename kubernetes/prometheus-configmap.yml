@@ -23,4 +23,5 @@ data:
         static_configs:
           - targets: ['micro-collector-service:8080',
                       'micro-recipient-service:8081',
-                      'micro-sender-service:8082' ]
+                      'micro-sender-service:8082',
+                      'micro-visualizer-service:8083']

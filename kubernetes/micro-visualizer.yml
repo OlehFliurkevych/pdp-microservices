@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-visualizer-deployment
+  labels:
+    project: pdp
+    app: micro-visualizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-visualizer
+  template:
+    metadata:
+      labels:
+        project: pdp
+        app: micro-visualizer
+    spec:
+      containers:
+        - name: micro-visualizer
+          image: olehfliurkevych/micro-visualizer:0.0.3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: service-port
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: service-port
+              containerPort: 8083
+          env:
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: port
+            - name: EUREKA_PREFER_IP
+              value: 'true'
+            - name: POSTGRES_URL
+              value: postgres-service:5432/postgres
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-visualizer-service
+  labels:
+    project: pdp
+    app: micro-visualizer
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+  selector:
+    app: micro-visualizer

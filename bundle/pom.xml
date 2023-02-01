@@ -18,6 +18,7 @@
     <module>../micro-collector</module>
     <module>../micro-recipient</module>
     <module>../micro-sender</module>
+    <module>../micro-visualizer</module>
   </modules>
 
 </project>
