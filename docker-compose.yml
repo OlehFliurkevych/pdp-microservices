@@ -12,6 +12,9 @@ services:
       - EUREKA_HOST=eureka
       - EUREKA_PORT=8761
       - EUREKA_PREFER_IP=true
+      - POSTGRES_URL=postgres:5432/postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
     healthcheck:
       test: curl -f http://localhost:8080/actuator/health || exit 1
       interval: 30s
@@ -144,6 +147,14 @@ services:
       - "3000:3000"
     networks:
       - metrics
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - recipient
+    environment:
+      - POSTGRES_PASSWORD=postgres
 networks:
   sender: { }
   recipient: { }

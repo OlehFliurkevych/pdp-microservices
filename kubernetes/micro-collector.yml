@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: micro-collector
-          image: olehfliurkevych/micro-collector:0.0.1
+          image: olehfliurkevych/micro-collector:0.0.2
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -48,6 +48,18 @@ spec:
                 configMapKeyRef:
                   name: schedule-configmap
                   key: rabbitmq_get_remove_all_fix_delay
+            - name: POSTGRES_URL
+              value: postgres-service:5432/postgres
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_password
                   
 ---
 apiVersion: v1

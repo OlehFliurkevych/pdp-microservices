@@ -1,5 +1,6 @@
 package com.fliurkevych.pdp.pdpmicrocollector.feign;
 
+import com.fliurkevych.pdp.pdpmicrocollector.entity.NotificationEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,6 @@ import java.util.List;
 public interface MicroRecipientFeignClient {
 
   @GetMapping("/messages/remove")
-  ResponseEntity<List<?>> getAndRemoveAllNotifications();
+  ResponseEntity<List<NotificationEntity>> getAndRemoveAllNotifications();
 
 }

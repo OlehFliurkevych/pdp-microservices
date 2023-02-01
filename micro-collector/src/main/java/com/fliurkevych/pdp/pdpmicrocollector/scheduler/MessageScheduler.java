@@ -1,6 +1,7 @@
 package com.fliurkevych.pdp.pdpmicrocollector.scheduler;
 
 import com.fliurkevych.pdp.pdpmicrocollector.feign.MicroRecipientFeignClient;
+import com.fliurkevych.pdp.pdpmicrocollector.repository.NotificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageScheduler {
 
+  private final NotificationRepository notificationRepository;
   private final MicroRecipientFeignClient microRecipientFeignClient;
 
-  public MessageScheduler(MicroRecipientFeignClient microRecipientFeignClient) {
+  public MessageScheduler(NotificationRepository notificationRepository,
+    MicroRecipientFeignClient microRecipientFeignClient) {
+    this.notificationRepository = notificationRepository;
     this.microRecipientFeignClient = microRecipientFeignClient;
   }
 
@@ -26,6 +30,12 @@ public class MessageScheduler {
     if (response.getStatusCode().is2xxSuccessful()) {
       log.info("Successfully called GET 'micro-recipient/messages/remove'. Body of response: [{}]",
         response.getBody());
+      response.getBody().stream()
+        .forEach(entity -> {
+          log.info("Save notification enity to DB");
+          var saved = notificationRepository.save(entity);
+          log.info("Saved notification entity with message: [{}]", saved.getMessage());
+        });
     } else {
       log.info("Failed call GET 'micro-recipient/messages/remove'");
     }
