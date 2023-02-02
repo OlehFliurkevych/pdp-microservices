@@ -17,4 +17,7 @@ public interface MicroRecipientFeignClient {
   @GetMapping("/messages/remove")
   ResponseEntity<List<NotificationEntity>> getAndRemoveAllNotifications();
 
+  @GetMapping("/message/remove")
+  ResponseEntity<NotificationEntity> getAndRemoveSingleNotification();
+
 }

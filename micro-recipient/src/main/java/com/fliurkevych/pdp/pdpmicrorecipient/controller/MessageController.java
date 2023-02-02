@@ -31,5 +31,11 @@ public class MessageController {
   public ResponseEntity<List<NotificationEntity>> getAllNotifications() {
     return ResponseEntity.ok(notificationService.getAllNotifications());
   }
-  
+
+  @GetMapping("/message/remove")
+  public ResponseEntity<NotificationEntity> getAndRemoveSingleNotification() {
+    return ResponseEntity.ok(notificationService.getAndRemoveSingleNotification());
+  }
+
+
 }

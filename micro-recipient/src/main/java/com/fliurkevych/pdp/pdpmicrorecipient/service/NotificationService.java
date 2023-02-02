@@ -45,6 +45,20 @@ public class NotificationService {
     return notifications;
   }
 
+  public NotificationEntity getAndRemoveSingleNotification() {
+    log.info("Fetching all notifications");
+    var notification = notificationRepository.findAll().stream()
+      .findFirst()
+      .orElseThrow(() -> new RuntimeException("Notification not found"));
+    log.info("Fetched message with id: [{}]", notification.getId());
+
+    log.info("Removing message with id: [{}]", notification.getId());
+    notificationRepository.deleteById(notification.getId());
+    log.info("Removed message with id: [{}]", notification.getId());
+
+    return notification;
+  }
+
   public List<NotificationEntity> getAllNotifications() {
     log.info("Fetching all notifications");
     var notifications = notificationRepository.findAll();
