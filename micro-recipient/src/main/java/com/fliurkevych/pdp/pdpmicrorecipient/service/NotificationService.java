@@ -46,7 +46,7 @@ public class NotificationService {
   }
 
   public NotificationEntity getAndRemoveSingleNotification() {
-    log.info("Fetching all notifications");
+    log.info("Fetching single notifications");
     var notification = notificationRepository.findAll().stream()
       .findFirst()
       .orElseThrow(() -> new RuntimeException("Notification not found"));
