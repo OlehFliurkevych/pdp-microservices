@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-recipient
+  labels:
+    project: pdp
+    app: micro-recipient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-recipient
+  template:
+    metadata:
+      labels:
+        project: pdp
+        app: micro-recipient
+    spec:
+      containers:
+        - name: micro-recipient
+          image: olehfliurkevych/micro-recipient:0.0.1
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: service-port
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: service-port
+              containerPort: 8081
+          env:
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: port
+            - name: EUREKA_PREFER_IP
+              value: 'true'
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: port
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: host
+            - name: RABBITMQ_QUEUE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: queue_name
+            - name: RABBITMQ_EXCHANGE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: exchange_name
+            - name: RABBITMQ_ROUTING_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: routing_key
+            - name: RABBITMQ_CONSUMER_FIX_DELAY
+              valueFrom:
+                configMapKeyRef:
+                  name: schedule-configmap
+                  key: rabbitmq_consumer_fix_delay

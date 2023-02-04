@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: micro-recipient-deployment
+  name: micro-recipient-new
   labels:
     project: pdp
-    app: micro-recipient
+    app: micro-recipient-new
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: micro-recipient
+      app: micro-recipient-new
   template:
     metadata:
       labels:
         project: pdp
-        app: micro-recipient
+        app: micro-recipient-new
     spec:
       containers:
         - name: micro-recipient
-          image: olehfliurkevych/micro-recipient:0.0.1
+          image: olehfliurkevych/micro-recipient:0.0.3
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -73,20 +73,3 @@ spec:
                 configMapKeyRef:
                   name: schedule-configmap
                   key: rabbitmq_consumer_fix_delay
-                  
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: micro-recipient-service
-  labels:
-    project: pdp
-    app: micro-recipient
-spec:
-  type: ClusterIP
-  ports:
-    - protocol: TCP
-      port: 8081
-      targetPort: 8081
-  selector:
-    app: micro-recipient

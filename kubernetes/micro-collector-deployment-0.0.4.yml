@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-collector-new
+  labels:
+    project: pdp
+    app: micro-collector-new
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: micro-collector-new
+  template:
+    metadata:
+      labels:
+        project: pdp
+        app: micro-collector-new
+    spec:
+      containers:
+        - name: micro-collector
+          image: olehfliurkevych/micro-collector:0.0.4
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: service-port
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: service-port
+              containerPort: 8080
+          env:
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-configmap
+                  key: port
+            - name: EUREKA_PREFER_IP
+              value: 'true'
+            - name: RABBITMQ_GET_REMOVE_ALL_FIX_DELAY
+              valueFrom:
+                configMapKeyRef:
+                  name: schedule-configmap
+                  key: rabbitmq_get_remove_all_fix_delay
+            - name: POSTGRES_URL
+              value: postgres-service:5432/postgres
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: postgres_password
