@@ -1,5 +1,11 @@
+FROM openjdk:11 as builder
+RUN mkdir -p /app/source
+COPY . /app/source
+WORKDIR /app/source
+RUN ./mvnw clean package
+
 FROM openjdk:11
-WORKDIR /
-ADD target/pdpmicrocollector-0.0.1-SNAPSHOT.jar //
-ENTRYPOINT ["java","-jar","/pdpmicrocollector-0.0.1-SNAPSHOT.jar"]
+ARG JAR_FILE=/app/source/target/*.jar
+COPY --from=builder ${JAR_FILE} /app/collector.jar
+ENTRYPOINT ["java","-jar","/app/collector.jar"]
 EXPOSE 8080
