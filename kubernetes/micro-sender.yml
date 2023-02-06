@@ -19,6 +19,7 @@ spec:
       containers:
         - name: micro-sender
           image: olehfliurkevych/micro-sender:0.0.1
+          imagePullPolicy: Always
           livenessProbe:
             httpGet:
               path: /actuator/health

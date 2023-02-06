@@ -19,6 +19,7 @@ spec:
       containers:
         - name: micro-visualizer
           image: olehfliurkevych/micro-visualizer:0.0.3
+          imagePullPolicy: Always
           livenessProbe:
             httpGet:
               path: /actuator/health
