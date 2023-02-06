@@ -11,8 +11,8 @@ Technologies:
 - Docker
 - Kubernetes
 ***
-Run following command to build and deploy modules in Docker:
+Build and deploy modules in Docker:
 > docker-compose up
 
-Run following command to build and deploy modules in Kubernetes:
+Build and deploy modules in Kubernetes:
 > kubectl apply -f kubernetes/.
