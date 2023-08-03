@@ -63,6 +63,7 @@ public class NotificationService {
     log.info("Fetching all notifications");
     var notifications = notificationRepository.findAll();
     log.info("Fetched [{}] records of notification", notifications.size());
+
     return notifications;
   }
 
